@@ -6,6 +6,8 @@ import style from './sorting.module.css'
 import { Direction } from "../../types/direction";
 import { Column } from "../ui/column/column";
 import { ElementStates } from "../../types/element-states";
+import { delay } from "../../constants/delays";
+import { DELAY_IN_MS } from "../../constants/delays";
 
 export const SortingPage: React.FC = () => {
   const [array, setArray] = React.useState<{ number: number, state: ElementStates }[]>([])
@@ -48,11 +50,11 @@ export const SortingPage: React.FC = () => {
       min = i;
       newArray[min].state = ElementStates.Changing;
       setArray([...newArray]);
-      await new Promise((res) => setTimeout(res, 500))
+      await delay(DELAY_IN_MS)
       for (let j = i + 1; j < newArray.length; j++) {
         newArray[j].state = ElementStates.Changing
         setArray([...newArray])
-        await new Promise((res) => setTimeout(res, 500))
+        await delay(DELAY_IN_MS)
         if (type === 'ascending' && newArray[j].number < newArray[min].number) {
           min = j
           newArray[j].state = ElementStates.Default;
@@ -87,7 +89,7 @@ export const SortingPage: React.FC = () => {
         newArray[j].state = ElementStates.Changing;
         newArray[j + 1].state = ElementStates.Changing
         setArray([...newArray])
-        await new Promise((resolve) => setTimeout(resolve, 1000))
+        await delay(DELAY_IN_MS)
         if (type === 'ascending' && newArray[j].number > newArray[j + 1].number) {
           const temp = newArray[j].number;
           newArray[j].number = newArray[j + 1].number;

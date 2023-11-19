@@ -4,6 +4,8 @@ import { Input } from "../ui/input/input";
 import { Button } from "../ui/button/button";
 import style from './fibonacci-page.module.css'
 import { Circle } from "../ui/circle/circle";
+import { SHORT_DELAY_IN_MS } from "../../constants/delays";
+import { delay } from "../../constants/delays";
 
 export const FibonacciPage: React.FC = () => {
   const [value, setValue] = React.useState('');
@@ -21,15 +23,15 @@ export const FibonacciPage: React.FC = () => {
 
   const fibonacci = async (n: number) => {
     let arr = [1]
-    await new Promise((res) => setTimeout(res, 500))
+    await delay(SHORT_DELAY_IN_MS)
     setArray([...arr])
     setButtonLoader(true)
     arr.push(1)
-    await new Promise((res) => setTimeout(res, 500))
+    await delay(SHORT_DELAY_IN_MS)
     setArray([...arr])
     for (let i = 2; i <= n; i++) {
       arr.push(arr[i - 2] + arr[i - 1])
-      await new Promise((res) => setTimeout(res, 500))
+      await delay(SHORT_DELAY_IN_MS)
       setArray([...arr])
     }
     setButtonLoader(false)

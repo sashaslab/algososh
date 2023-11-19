@@ -7,6 +7,8 @@ import { LinkedList } from "./list";
 import { Circle } from "../ui/circle/circle";
 import { ArrowIcon } from "../ui/icons/arrow-icon";
 import { ElementStates } from "../../types/element-states";
+import { delay } from "../../constants/delays";
+import { SHORT_DELAY_IN_MS } from "../../constants/delays";
 
 
 interface ITmp {
@@ -62,7 +64,7 @@ export const ListPage: React.FC = () => {
       addByIndex: true,
       deleteByIndex: true
     })
-    await new Promise((res) => setTimeout(res, 500))
+    await delay(SHORT_DELAY_IN_MS)
     setList([...array.current.toArray()])
       setTmp({ value: '', index: 0, head: true })
       setInputValue('')
@@ -76,7 +78,7 @@ export const ListPage: React.FC = () => {
         deleteByIndex: false
       })
     await new Promise((res) => {
-      setTimeout(res, 500)
+      setTimeout(res, SHORT_DELAY_IN_MS)
       setColor(ElementStates.Modified)
     })
     setColor(ElementStates.Default)
@@ -93,7 +95,7 @@ export const ListPage: React.FC = () => {
       addByIndex: true,
       deleteByIndex: true
     })
-    await new Promise((res) => setTimeout(res, 500))
+    await delay(SHORT_DELAY_IN_MS)
     setList([...array.current.toArray()])
     setTmp({ value: '', index: array.current.size - 1, head: true })
     setInputValue('')
@@ -106,7 +108,7 @@ export const ListPage: React.FC = () => {
       deleteByIndex: false
     })
     await new Promise((res) => {
-      setTimeout(res, 500)
+      setTimeout(res, SHORT_DELAY_IN_MS)
       setColor(ElementStates.Modified)
     })
     setColor(ElementStates.Default)
@@ -123,7 +125,7 @@ export const ListPage: React.FC = () => {
       addByIndex: true,
       deleteByIndex: true
     })
-    await new Promise((res) => setTimeout(res, 500))
+    await delay(SHORT_DELAY_IN_MS)
     setList([...array.current.toArray()]);
     setTmp({ value: '', index: null, head: false })
     setButtonsLoader({ ...buttonsLoader, deleteFromHead: false })
@@ -148,7 +150,7 @@ export const ListPage: React.FC = () => {
       addByIndex: true,
       deleteByIndex: true
     })
-    await new Promise((res) => setTimeout(res, 500))
+    await delay(SHORT_DELAY_IN_MS)
     setList([...array.current.toArray()])
     setTmp({ value: '', index: null, head: false })
     setButtonsLoader({ ...buttonsLoader, deleteFromTail: false })
@@ -175,12 +177,12 @@ export const ListPage: React.FC = () => {
       deleteByIndex: true
     })
     for (let i = 0; i <= index; i++) {
-      await new Promise((res) => setTimeout(res, 500))
+      await delay(SHORT_DELAY_IN_MS)
       setTmp({ value: inputValue, index: i, head: true })
       setColor(ElementStates.Changing)
       setCounter(i)
     }
-    await new Promise((res) => setTimeout(res, 500))
+    await delay(SHORT_DELAY_IN_MS)
     setCounter(-1)
     setSortByIndex(false)
     setColor(ElementStates.Modified);
@@ -202,6 +204,7 @@ export const ListPage: React.FC = () => {
   }
 
   const deleteByIndex = async () => {
+    setInputValue('')
     setSortByIndex(true)
     const index = Number(inputIndex);
     array.current.deleteByIndex(Number(inputIndex));
@@ -214,14 +217,14 @@ export const ListPage: React.FC = () => {
       deleteFromTail: true
     })
     for (let i = 0; i <= index; i++) {
-      await new Promise((res) => setTimeout(res, 500))
-      setTmp({ value: inputValue, index: i, head: true })
+      await delay(SHORT_DELAY_IN_MS)
+      setTmp({ value: '', index: i, head: true })
       setColor(ElementStates.Changing)
       setCounter(i)
     }
-    await new Promise((res) => setTimeout(res, 500))
+    await delay(SHORT_DELAY_IN_MS)
     setTmp({ value: '', index: index, head: false })
-    await new Promise((res) => setTimeout(res, 500))
+    await delay(SHORT_DELAY_IN_MS)
     setList([...array.current.toArray()])
     setTmp({ value: '', index: null, head: true })
     setCounter(-1)
@@ -246,23 +249,25 @@ export const ListPage: React.FC = () => {
 
   const inputIndexDisabled = buttonsLoader.addToHead || buttonsLoader.addToTail || buttonsLoader.addByIndex || buttonsLoader.deleteByIndex || buttonsLoader.deleteFromHead || buttonsLoader.deleteFromTail
 
+
+
   return (
     <SolutionLayout title="Связный список">
       <div className={style.container}>
         <form className={style.enter_value}>
           <Input disabled={inputValueDisabled} isLimitText type="text" maxLength={4} extraClass={style.input} placeholder="Введите значение" value={inputValue} onChange={handleChangeInputValue} />
           <div className={style.buttons_value}>
-            <Button extraClass={style.button_value} isLoader={buttonsLoader.addToHead} disabled={buttonsDisabled.addToHead} onClick={addToHead} text="Добавить в head" />
-            <Button extraClass={style.button_value} isLoader={buttonsLoader.addToTail} disabled={buttonsDisabled.addToTail} text="Добавить в tail" onClick={addToTail} />
-            <Button extraClass={style.button_value} isLoader={buttonsLoader.deleteFromHead} disabled={buttonsDisabled.deleteFromHead} text="Удалить из head" onClick={deleteFromHead} />
-            <Button extraClass={style.button_value} isLoader={buttonsLoader.deleteFromTail} disabled={buttonsDisabled.deleteFromTail} text="Удалить из tail" onClick={deleteFromTail} />
+            <Button extraClass={style.button_value} isLoader={buttonsLoader.addToHead} disabled={buttonsDisabled.addToHead || inputValue === '' || isNaN(Number(inputValue))} onClick={addToHead} text="Добавить в head" />
+            <Button extraClass={style.button_value} isLoader={buttonsLoader.addToTail} disabled={buttonsDisabled.addToTail || inputValue === '' || isNaN(Number(inputValue))} text="Добавить в tail" onClick={addToTail} />
+            <Button extraClass={style.button_value} isLoader={buttonsLoader.deleteFromHead} disabled={buttonsDisabled.deleteFromHead || list.length === 0} text="Удалить из head" onClick={deleteFromHead} />
+            <Button extraClass={style.button_value} isLoader={buttonsLoader.deleteFromTail} disabled={buttonsDisabled.deleteFromTail || list.length === 0} text="Удалить из tail" onClick={deleteFromTail} />
           </div>
         </form>
         <form className={style.enter_index}>
           <Input disabled={inputIndexDisabled} type="number" extraClass={style.input} placeholder="Введите индекс" onChange={handleChangeInputIndex} value={inputIndex} />
           <div className={style.buttons_index}>
-            <Button extraClass={style.button_index} isLoader={buttonsLoader.addByIndex} disabled={buttonsDisabled.addByIndex} text="Добавить по индексу" onClick={addByIndex} />
-            <Button extraClass={style.button_index} isLoader={buttonsLoader.deleteByIndex} disabled={buttonsDisabled.deleteByIndex} text="Удалить по индексу" onClick={deleteByIndex} />
+            <Button extraClass={style.button_index} isLoader={buttonsLoader.addByIndex} disabled={buttonsDisabled.addByIndex || inputIndex === '' || inputValue === '' || (Number(inputIndex) > list.length - 1)} text="Добавить по индексу" onClick={addByIndex} />
+            <Button extraClass={style.button_index} isLoader={buttonsLoader.deleteByIndex} disabled={buttonsDisabled.deleteByIndex || inputIndex === '' || (Number(inputIndex) > list.length - 1) || Number(inputIndex) < 0} text="Удалить по индексу" onClick={deleteByIndex} />
           </div>
         </form>
       </div>

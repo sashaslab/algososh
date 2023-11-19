@@ -6,6 +6,8 @@ import style from './queue-page.module.css'
 import { Queue } from "./queue";
 import { Circle } from "../ui/circle/circle";
 import { ElementStates } from "../../types/element-states";
+import { delay } from "../../constants/delays";
+import { SHORT_DELAY_IN_MS } from "../../constants/delays";
 
 export const QueuePage: React.FC = () => {
   const [value, setValue] = React.useState('');
@@ -17,6 +19,11 @@ export const QueuePage: React.FC = () => {
     delete: true,
     clear: true
   })
+  const [buttonLoader, setButtonLoader] = React.useState({
+    delete: false,
+    clear: false,
+    add: false,
+  })
 
   const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value)
@@ -24,26 +31,33 @@ export const QueuePage: React.FC = () => {
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setButtonLoader({ ...buttonLoader, add: true })
     array.current.enqueue(Number(value))
     setButtonDisabled({ ...buttonDisabled, delete: false, clear: false })
     setQueue([...array.current.elements])
     setValue('')
     setColorHead(true)
-    await new Promise((res) => setTimeout(res, 500))
+    await delay(SHORT_DELAY_IN_MS)
     setColorHead(false)
+    setButtonLoader({ ...buttonLoader, add: false })
   }
 
-  const onDelete = async() => {
+  const onDelete = async () => {
     setColorTail(true);
-    await new Promise((res) => setTimeout(res, 500))
+    setButtonLoader({ ...buttonLoader, delete: true })
+    await delay(SHORT_DELAY_IN_MS)
     array.current.dequeue()
-      setQueue([...array.current.elements])
-      setColorTail(false)
+    setQueue([...array.current.elements])
+    setColorTail(false)
+    setButtonLoader({...buttonLoader, delete: false})
   }
 
-  const onClear = () => {
+  const onClear = async () => {
+    setButtonLoader({ ...buttonLoader, clear: true })
+    await delay(SHORT_DELAY_IN_MS)
     array.current.clear()
     setQueue(Array(7).fill(''))
+    setButtonLoader({ ...buttonLoader, clear: false })
   }
 
   return (
@@ -51,10 +65,10 @@ export const QueuePage: React.FC = () => {
       <form className={style.form} onSubmit={onSubmit}>
         <div className={style.content}>
           <Input extraClass={style.input} maxLength={4} isLimitText value={value} onChange={handleChangeInput} />
-          <Button type="submit" text="Добавить" disabled={value === '' ? true : false} />
-          <Button text="Удалить" disabled={array.current.peak() === null ? true : false} onClick={onDelete} />
+          <Button type="submit" text="Добавить" isLoader={buttonLoader.add} disabled={value === '' ? true : false} />
+          <Button text="Удалить" isLoader={buttonLoader.delete} disabled={array.current.peak() === null ? true : false} onClick={onDelete} />
         </div>
-        <Button text="Очистить" disabled={array.current.peak() === null ? true : false} onClick={onClear} />
+        <Button text="Очистить" isLoader={buttonLoader.clear} disabled={array.current.peak() === null ? true : false} onClick={onClear} />
       </form>
       <div className={style.container}>
         {queue.map((item, index) => {

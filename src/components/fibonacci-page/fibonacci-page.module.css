@@ -1,0 +1,21 @@
+.content {
+    max-width: 567px;
+    display: flex;
+    margin: 0 auto;
+    gap: 12px;
+}
+
+.container {
+    margin: 0 auto;
+    padding-top: 120px;
+    display: flex;
+    max-width: 944px;
+    justify-content: center;
+}
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 16px;
+    row-gap: 48px;
+}

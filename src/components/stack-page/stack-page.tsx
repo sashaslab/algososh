@@ -12,10 +12,15 @@ import { SHORT_DELAY_IN_MS } from "../../constants/delays";
 export const StackPage: React.FC = () => {
 
   const [value, setValue] = React.useState<string>('')
-  const array = React.useRef(new Stack<number>())
-  const [stack, setStack] = React.useState<number[]>([])
+  const array = React.useRef(new Stack<string>())
+  const [stack, setStack] = React.useState<string[]>([])
   const [color, setColor] = React.useState<boolean>(false);
   const [buttonLoader, setButtonLoader] = React.useState({
+    add: false,
+    delete: false,
+    clear: false
+  })
+  const [buttonDisabled, setButtonDisabled] = React.useState({
     add: false,
     delete: false,
     clear: false
@@ -28,31 +33,37 @@ export const StackPage: React.FC = () => {
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setButtonLoader({...buttonLoader, add: true})
+    setButtonDisabled({...buttonDisabled, delete: true, clear: true})
     setColor(true)
-    array.current.push(Number(value))
+    array.current.push(value)
     setStack([...array.current.elements])
     setValue('')
     await delay(SHORT_DELAY_IN_MS)
     setColor(false)
     setButtonLoader({...buttonLoader, add: false})
+    setButtonDisabled({...buttonDisabled, delete: false, clear: false})
   }
 
   const onClickDelete = async () => {
     array.current.pop()
     setButtonLoader({...buttonLoader, delete: true})
+    setButtonDisabled({...buttonDisabled, add: true, clear: true})
     setStack([...array.current.elements]);
     setColor(true);
     await delay(SHORT_DELAY_IN_MS)
     setColor(false);
     setButtonLoader({...buttonLoader, delete: false})
+    setButtonDisabled({...buttonDisabled, add: false, clear: false})
   }
 
   const onClickClear = async () => {
     setButtonLoader({...buttonLoader, clear: true})
+    setButtonDisabled({...buttonDisabled, add: true, delete: true})
     await delay(SHORT_DELAY_IN_MS)
     array.current.clear()
     setStack([...array.current.elements])
     setButtonLoader({...buttonLoader, clear: false})
+    setButtonDisabled({...buttonDisabled, add: false, delete: false})
   }
 
   return (
@@ -67,15 +78,15 @@ export const StackPage: React.FC = () => {
       }>
         <div className={style.container}>
           <Input placeholder="Введите число" isLimitText type="text" maxLength={4} value={value} extraClass={style.input} onChange={handleChangeInput} />
-          <Button type="submit" text="Добавить" isLoader={buttonLoader.add} disabled={value === '' ? true : false} />
-          <Button text="Удалить" isLoader={buttonLoader.delete} disabled={stack.length === 0 ? true : false} onClick={onClickDelete} />
+          <Button type="submit" text="Добавить" isLoader={buttonLoader.add} disabled={value === '' || buttonDisabled.add} />
+          <Button text="Удалить" isLoader={buttonLoader.delete} disabled={stack.length === 0 || buttonDisabled.delete} onClick={onClickDelete} />
         </div>
-        <Button text="Очистить" isLoader={buttonLoader.clear} disabled={stack.length === 0 ? true : false} onClick={onClickClear} />
+        <Button text="Очистить" isLoader={buttonLoader.clear} disabled={stack.length === 0 || buttonDisabled.clear} onClick={onClickClear} />
       </form>
 
       <div className={style.bubble}>
         {stack.map((item, index) => {
-          return <Circle key={index} letter={item.toString()} head={index === array.current.size - 1 ? 'top' : null} tail={`${index}`} state={color && index === array.current.size - 1 ? ElementStates.Changing : ElementStates.Default} />
+          return <Circle key={index} letter={item} head={index === array.current.size - 1 ? 'top' : null} tail={`${index}`} state={color && index === array.current.size - 1 ? ElementStates.Changing : ElementStates.Default} />
         })}
       </div>
     </SolutionLayout>

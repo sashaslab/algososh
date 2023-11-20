@@ -11,8 +11,8 @@ import { SHORT_DELAY_IN_MS } from "../../constants/delays";
 
 export const QueuePage: React.FC = () => {
   const [value, setValue] = React.useState('');
-  const array = React.useRef(new Queue<number>(7))
-  const [queue, setQueue] = React.useState<(number | null | string)[]>(Array(7).fill(''));
+  const array = React.useRef(new Queue<string>(7))
+  const [queue, setQueue] = React.useState<(null | string)[]>(Array(7).fill(''));
   const [colorHead, setColorHead] = React.useState(false)
   const [colorTail, setColorTail] = React.useState(false)
   const [buttonDisabled, setButtonDisabled] = React.useState({
@@ -29,10 +29,12 @@ export const QueuePage: React.FC = () => {
     setValue(e.target.value)
   }
 
+
+
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setButtonLoader({ ...buttonLoader, add: true })
-    array.current.enqueue(Number(value))
+    array.current.enqueue(value)
     setButtonDisabled({ ...buttonDisabled, delete: false, clear: false })
     setQueue([...array.current.elements])
     setValue('')
@@ -65,7 +67,7 @@ export const QueuePage: React.FC = () => {
       <form className={style.form} onSubmit={onSubmit}>
         <div className={style.content}>
           <Input extraClass={style.input} maxLength={4} isLimitText value={value} onChange={handleChangeInput} />
-          <Button type="submit" text="Добавить" isLoader={buttonLoader.add} disabled={value === '' ? true : false} />
+          <Button type="submit" text="Добавить" isLoader={buttonLoader.add} disabled={value === '' || array.current.tailIndex === 6 ? true : false} />
           <Button text="Удалить" isLoader={buttonLoader.delete} disabled={array.current.peak() === null ? true : false} onClick={onDelete} />
         </div>
         <Button text="Очистить" isLoader={buttonLoader.clear} disabled={array.current.peak() === null ? true : false} onClick={onClear} />

@@ -21,7 +21,7 @@ export const ListPage: React.FC = () => {
 
   const [inputValue, setInputValue] = React.useState('');
   const [inputIndex, setInputIndex] = React.useState('');
-  const array = React.useRef(new LinkedList([0, 34, 8, 1]))
+  const array = React.useRef(new LinkedList(['0', '34', '8', '1']))
   const [list, setList] = React.useState(array.current.toArray())
   const [tmp, setTmp] = React.useState<ITmp>({ value: '', index: null, head: true })
   const [color, setColor] = React.useState(ElementStates.Default);
@@ -53,7 +53,7 @@ export const ListPage: React.FC = () => {
   }
 
   const addToHead = async () => {
-    array.current.prepend(Number(inputValue))
+    array.current.prepend(inputValue)
     setTmp({ value: inputValue, index: 0, head: true })
     setButtonsLoader({ ...buttonsLoader, addToHead: true })
     setButtonsDisabled({
@@ -85,7 +85,7 @@ export const ListPage: React.FC = () => {
   }
 
   const addToTail = async () => {
-    array.current.append(Number(inputValue))
+    array.current.append(inputValue)
     setTmp({ value: inputValue, index: array.current.size - 2, head: true })
     setButtonsLoader({ ...buttonsLoader, addToTail: true })
     setButtonsDisabled({
@@ -167,7 +167,7 @@ export const ListPage: React.FC = () => {
   const addByIndex = async () => {
     setSortByIndex(true)
     const index = Number(inputIndex)
-    array.current.addByIndex(Number(inputValue), Number(inputIndex));
+    array.current.addByIndex(inputValue, Number(inputIndex));
     setButtonsLoader({ ...buttonsLoader, addByIndex: true })
     setButtonsDisabled({
       ...buttonsDisabled, addToHead: true,
@@ -257,8 +257,8 @@ export const ListPage: React.FC = () => {
         <form className={style.enter_value}>
           <Input disabled={inputValueDisabled} isLimitText type="text" maxLength={4} extraClass={style.input} placeholder="Введите значение" value={inputValue} onChange={handleChangeInputValue} />
           <div className={style.buttons_value}>
-            <Button extraClass={style.button_value} isLoader={buttonsLoader.addToHead} disabled={buttonsDisabled.addToHead || inputValue === '' || isNaN(Number(inputValue))} onClick={addToHead} text="Добавить в head" />
-            <Button extraClass={style.button_value} isLoader={buttonsLoader.addToTail} disabled={buttonsDisabled.addToTail || inputValue === '' || isNaN(Number(inputValue))} text="Добавить в tail" onClick={addToTail} />
+            <Button extraClass={style.button_value} isLoader={buttonsLoader.addToHead} disabled={buttonsDisabled.addToHead || inputValue === ''} onClick={addToHead} text="Добавить в head" />
+            <Button extraClass={style.button_value} isLoader={buttonsLoader.addToTail} disabled={buttonsDisabled.addToTail || inputValue === ''} text="Добавить в tail" onClick={addToTail} />
             <Button extraClass={style.button_value} isLoader={buttonsLoader.deleteFromHead} disabled={buttonsDisabled.deleteFromHead || list.length === 0} text="Удалить из head" onClick={deleteFromHead} />
             <Button extraClass={style.button_value} isLoader={buttonsLoader.deleteFromTail} disabled={buttonsDisabled.deleteFromTail || list.length === 0} text="Удалить из tail" onClick={deleteFromTail} />
           </div>

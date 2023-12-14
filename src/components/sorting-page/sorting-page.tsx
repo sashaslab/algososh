@@ -9,7 +9,7 @@ import { ElementStates } from "../../types/element-states";
 import { delay } from "../../constants/delays";
 import { DELAY_IN_MS } from "../../constants/delays";
 
-export const SortingPage: React.FC = () => {
+export const SortingPage: React.FC<{arr?: Array<number>}> = ({arr}) => {
   const [array, setArray] = React.useState<{ number: number, state: ElementStates }[]>([])
   const [checked, setChecked] = React.useState<string>('select');
   const [buttonLoader, setButtonLoader] = React.useState({
@@ -28,19 +28,26 @@ export const SortingPage: React.FC = () => {
   }
 
   const randomArr = () => {
-    const length = Math.floor(Math.random() * 15) + 3;
-    const min = 0;
-    const max = 100;
+    const length = Math.floor(Math.random() * (Math.max(17, 3) - Math.min(17, 3) + 1)) + Math.min(17, 3)
     const randomArray = [];
     for (let i = 0; i < length; i++) {
-      const value = Math.floor(Math.random() * (max - min + 1)) + min;
+      const value = Math.floor(Math.random() * (100 - 0));
       randomArray.push({ number: value, state: ElementStates.Default })
     }
     setArray(randomArray)
   }
 
   React.useEffect(() => {
-    randomArr()
+    if(arr) {
+      const currentArr = []
+      for(let i = 0; i < arr.length; i++) {
+        currentArr.push({number: arr[i], state: ElementStates.Default})
+      }
+      setArray(currentArr)
+    } else {
+      randomArr()
+    }
+    
   }, [])
 
   const selectSort = async (type: string) => {
@@ -131,21 +138,20 @@ export const SortingPage: React.FC = () => {
     }
   }
 
-
   return (
     <SolutionLayout title="Сортировка массива">
       <div className={style.content}>
         <div className={style.radio}>
-          <RadioInput checked={checked === 'select'} label="Выбор" name="name" value='select' onChange={handleRadioChanhge} />
-          <RadioInput checked={checked === 'bubble'} label="Пузырёк" name="name" value='bubble' onChange={handleRadioChanhge} />
+          <RadioInput data-testid={'select'} checked={checked === 'select'} label="Выбор" name="name" value='select' onChange={handleRadioChanhge} />
+          <RadioInput data-testid={'bubble'} checked={checked === 'bubble'} label="Пузырёк" name="name" value='bubble' onChange={handleRadioChanhge} />
         </div>
         <div className={style.sorting}>
-          <Button sorting={Direction.Ascending} isLoader={buttonLoader.ascending} disabled={buttonDisabled.ascending} text="По возростанию" onClick={onClickAscending} />
-          <Button sorting={Direction.Descending} isLoader={buttonLoader.descending} disabled={buttonDisabled.descending} text="По убыванию" onClick={onClickDescending} />
+          <Button data-testid={'ascending'} sorting={Direction.Ascending} isLoader={buttonLoader.ascending} disabled={buttonDisabled.ascending} text="По возростанию" onClick={onClickAscending} />
+          <Button data-testid={'descending'} sorting={Direction.Descending} isLoader={buttonLoader.descending} disabled={buttonDisabled.descending} text="По убыванию" onClick={onClickDescending} />
         </div>
         <Button text="Новый массив" disabled={buttonDisabled.newArray} onClick={randomArr} />
       </div>
-      <div className={style.column}>
+      <div data-testid={'columns'} className={style.column}>
         {array.map((item, index) => {
           return <Column index={item.number} key={index} state={item.state} />
         })}

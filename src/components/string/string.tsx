@@ -17,7 +17,7 @@ export const StringComponent: React.FC = () => {
   const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue(e.target.value)
   }
-
+  
   const nextStep = () => {
     if (currentIndex < Math.floor(array.length / 2)) {
       const newArray = [...array];
@@ -55,8 +55,8 @@ export const StringComponent: React.FC = () => {
   return (
     <SolutionLayout title="Строка">
       <form className={style.content} onSubmit={onSubmit}>
-        <Input isLimitText type="text" onChange={handleChangeInput} value={value} maxLength={11}></Input>
-        <Button text="Развернуть" isLoader={buttonLoader} type="submit" disabled={value === '' ? true : false}></Button>
+        <Input isLimitText data-testid={'input'} type="text" onChange={handleChangeInput} value={value} maxLength={11}></Input>
+        <Button text="Развернуть" data-testid={'button'} isLoader={buttonLoader} type="submit" disabled={value === '' ? true : false}></Button>
       </form>
       <div className={style.container}>
       {array.map((item, index) => {

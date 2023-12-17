@@ -1,7 +1,9 @@
+import { CIRCLE, INPUT } from "../../src/constants/element-captions";
+
 describe('E2E testing string', () => {
     beforeEach(() => {
-        cy.visit('http://localhost:3000/recursion');
-        cy.get('input[type="text"]').as('input')
+        cy.visit('/recursion');
+        cy.get(INPUT).as('input')
         cy.get('button[type="submit"]').as('button');
 
     })
@@ -14,7 +16,7 @@ describe('E2E testing string', () => {
     it('Check that the string is expanded correctly', () => {
         cy.get('@input').type('Hello')
         cy.get('@button').should('not.be.disabled').click()
-        cy.get('[data-testid="circle"]').as('circle')
+        cy.get(CIRCLE).as('circle')
         cy.get('@circle').eq(0).should('contain', 'H').should('have.css', 'border', '4px solid rgb(210, 82, 225)')
         cy.get('@circle').eq(1).should('contain', 'e').should('have.css', 'border', '4px solid rgb(0, 50, 255)')
         cy.get('@circle').eq(2).should('contain', 'l').should('have.css', 'border', '4px solid rgb(0, 50, 255)')

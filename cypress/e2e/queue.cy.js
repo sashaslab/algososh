@@ -1,11 +1,13 @@
+import { CIRCLE, INPUT } from "../../src/constants/element-captions";
+
 describe('E2E testing queue', () => {
     beforeEach(() => {
-        cy.visit('http://localhost:3000/queue');
+        cy.visit('/queue');
         cy.get('button').contains('Добавить').as('add');
         cy.get('button').contains('Удалить').as('delete');
         cy.get('button').contains('Очистить').as('clear');
-        cy.get('input[type="text"]').as('input')
-        cy.get('[data-testid="circle"]').as('circle')
+        cy.get(INPUT).as('input')
+        cy.get(CIRCLE).as('circle')
         cy.get('[data-testid="head"]').as('head')
         cy.get('[data-testid="tail"]').as('tail')
     })

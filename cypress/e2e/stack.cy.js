@@ -1,7 +1,9 @@
+import { CIRCLE, INPUT } from "../../src/constants/element-captions";
+
 describe('E2E testing stack', () => {
     beforeEach(() => {
-        cy.visit('http://localhost:3000/stack');
-        cy.get('input[type="text"]').as('input')
+        cy.visit('/stack');
+        cy.get(INPUT).as('input')
         cy.get('button').contains('Добавить').as('add')
         cy.get('button').contains('Удалить').as('delete')
         cy.get('button').contains('Очистить').as('clear')
@@ -14,7 +16,7 @@ describe('E2E testing stack', () => {
     it('Check that the element was added to the stack correctly. It is important to make sure that the colors of the elements change and each step of the animation works correctly', () => {
         cy.get('@input').type(1);
         cy.get('@add').click()
-        cy.get('[data-testid="circle"]').as('circle')
+        cy.get(CIRCLE).as('circle')
         cy.get('@circle').eq(0).should('contain', '1').should('have.css', 'border', '4px solid rgb(210, 82, 225)')
         cy.get('@circle').eq(0).should('contain', '1').should('have.css', 'border', '4px solid rgb(0, 50, 255)')
         cy.get('@input').type(2);
@@ -27,7 +29,7 @@ describe('E2E testing stack', () => {
         cy.get('@add').click()
         cy.get('@input').type(2);
         cy.get('@add').click()
-        cy.get('[data-testid="circle"]').as('circle')
+        cy.get(CIRCLE).as('circle')
         cy.wait(1000)
         cy.get('@circle').eq(0).should('exist')
         cy.get('@circle').eq(1).should('exist')
@@ -40,7 +42,7 @@ describe('E2E testing stack', () => {
         cy.get('@add').click()
         cy.get('@input').type(2);
         cy.get('@add').click()
-        cy.get('[data-testid="circle"]').as('circle')
+        cy.get(CIRCLE).as('circle')
         cy.wait(1000)
         cy.get('@circle').should('exist')
         cy.get('@clear').click()

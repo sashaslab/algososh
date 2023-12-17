@@ -1,6 +1,8 @@
+import { CIRCLE } from '../../src/constants/element-captions'
+
 describe('E2E testing list', () => {
     beforeEach(() => {
-        cy.visit('http://localhost:3000/list');
+        cy.visit('/list');
         cy.get('[class^=list-page_enter_value]').as('formEnterValue')
         cy.get('[class^=list-page_enter_index]').as('formEnterIndex')
         cy.get('@formEnterValue').find('[class^=input_input]').as('inputValue')
@@ -11,7 +13,7 @@ describe('E2E testing list', () => {
         cy.get('@formEnterIndex').find('[class^=input_input]').as('inputIndex')
         cy.get('@formEnterIndex').find('button').contains('Добавить по индексу').as('addIndex')
         cy.get('@formEnterIndex').find('button').contains('Удалить по индексу').as('deleteIndex')
-        cy.get('[data-testid="circle"]').as('circle')
+        cy.get(CIRCLE).as('circle')
         cy.get('[data-testid="head"]').as('head')
         cy.get('[data-testid="tail"]').as('tail')
     })

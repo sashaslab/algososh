@@ -1,23 +1,23 @@
 describe('Testing page transitions', function() {
     it('home page', () => {
-      cy.visit('http://localhost:3000');
+      cy.visit('/');
     });
     it('recursion page', () => {
-      cy.visit('http://localhost:3000/recursion')
+      cy.visit('/recursion')
     })
     it('fibonacci page', () => {
-      cy.visit('http://localhost:3000/fibonacci')
+      cy.visit('/fibonacci')
     })
     it('sorting page', () => {
-      cy.visit('http://localhost:3000/sorting')
+      cy.visit('/sorting')
     })
     it('stack page', () => {
-      cy.visit('http://localhost:3000/stack')
+      cy.visit('/stack')
     })
     it('queue page', () => {
-      cy.visit('http://localhost:3000/queue')
+      cy.visit('/queue')
     })
     it('list page', () => {
-      cy.visit('http://localhost:3000/list')
+      cy.visit('/list')
     })
   });

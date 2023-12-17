@@ -1,6 +1,8 @@
+import { CIRCLE } from "../../src/constants/element-captions";
+
 describe('E2E Fibonacci testing', () => {
     beforeEach(() => {
-       cy.visit('http://localhost:3000/fibonacci');
+       cy.visit('/fibonacci');
        cy.get('input[type="number"]').as('input');
        cy.get('button[type="submit"]').as('button');
     })
@@ -13,7 +15,7 @@ describe('E2E Fibonacci testing', () => {
    it('Check that the numbers are generated correctly', () => {
     cy.get('@input').type(4)
     cy.get('@button').click()
-    cy.get('[data-testid="circle"]').as('circle')
+    cy.get(CIRCLE).as('circle')
     cy.get('@circle').eq(0).should('contain', '1')
     cy.get('@circle').eq(1).should('contain', '1')
     cy.get('@circle').eq(2).should('contain', '2')
